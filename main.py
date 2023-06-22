@@ -6,9 +6,6 @@ from dotenv import load_dotenv
 from flask import Flask
 from threading import Thread
 
-
-
-
 load_dotenv()
 
 def get_prefix(bot, message):
@@ -25,12 +22,6 @@ STATUS = os.getenv("STATUS")
 FOOTER = os.getenv("FOOTER")
 ICON = os.getenv('ICON_URL')
 
-os.system("title dabu BOT")
-print("****************************************************************")
-print("* Copyright of dabu, 2021                                      *")
-print("* https://www.green-play.cz                                    *")
-print("* https://www.youtube.com/channel/UCwKdMABJXncgE7PKtzuvDUQ     *")
-print("****************************************************************")
 print(f"""     _       _             ____   ____ _______
     | |     | |           |  _ \ / __ \__   __|
   __| | __ _| |__  _   _  | |_) | |  | | | |
