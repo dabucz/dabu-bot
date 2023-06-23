@@ -1,4 +1,4 @@
-import os
+
 import asyncio
 import functools
 import itertools
@@ -8,13 +8,7 @@ import youtube_dl
 from async_timeout import timeout
 from discord.ext import commands
 import discord
-
-
-TOKEN = os.getenv("TOKEN")
-STATUS = os.getenv("STATUS")
-FOOTER = os.getenv("FOOTER")
-ICON = os.getenv('ICON_URL')
-
+from main import FOOTER, ICON
 youtube_dl.utils.bug_reports_message = lambda: ''
 
 
@@ -504,5 +498,5 @@ class Music(commands.Cog):
         if ctx.voice_client:
             if ctx.voice_client.channel != ctx.author.voice.channel:
                 raise commands.CommandError('client is already in a voice channel.')
-def setup(bot):
-    bot.add_cog(Music(bot))
+async def setup(bot):
+    await bot.add_cog(Music(bot))

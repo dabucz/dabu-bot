@@ -1,17 +1,9 @@
 import os
-import json
 from discord.ext import commands
 import discord
-from discord.ext import commands
-import os
-import os
 from discord.ext.commands import has_permissions, MissingPermissions
-import json
-from dotenv import load_dotenv
-
-load_dotenv()
-FOOTER = os.getenv('FOOTER')
-ICON = os.getenv('ICON_URL')
+from db import db
+from main import FOOTER, ICON
 
 class Mod(commands.Cog):
     def __init__(self, bot):
@@ -68,7 +60,7 @@ class Mod(commands.Cog):
         await member.ban(reason=reason)
         await ctx.send(f'User {member} has been banned for {reason}.')
 
-
+  
     @commands.command(aliases=['c'])
     @commands.has_permissions(manage_messages=True)
     async def clear(self,ctx, amount=2):
@@ -106,13 +98,7 @@ class Mod(commands.Cog):
     @commands.command(pass_context=True)
     @has_permissions(administrator=True)
     async def setprefix(self,ctx, prefix):
-        with open('db/prefixes.json', 'r') as f:
-            prefixes = json.load(f)
-
-        prefixes[str(ctx.guild.id)] = prefix
-
-        with open('db/prefixes.json', 'w') as f:
-            json.dump(prefixes, f, indent=4)
+        db.set_prefix(ctx.guild.id, prefix)
 
         await ctx.send(f'Prefix changed to: {prefix}')
         await ctx.guild.me.edit(nick=f"{prefix}┃{self.bot.user.name}")
@@ -172,5 +158,5 @@ class Mod(commands.Cog):
 
 
 
-def setup(bot):
-    bot.add_cog(Mod(bot))
+async def setup(bot):
+    await bot.add_cog(Mod(bot))

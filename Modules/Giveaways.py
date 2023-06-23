@@ -2,12 +2,10 @@ import discord
 import asyncio
 from discord.ext import commands
 import random
-import os
 
 from discord.ext.commands import has_permissions
 
-FOOTER = os.getenv('FOOTER')
-ICON = os.getenv('ICON_URL')
+from main import ICON
 
 class Giveaways(commands.Cog):
     def __init__(self, bot):
@@ -26,13 +24,11 @@ class Giveaways(commands.Cog):
         embed.set_footer(text=f"Giveaway ends in {time}", icon_url=ICON)
         gaw_msg = await ctx.send(embed=embed)
 
-        icon = self.bot.get_emoji(863110974918754365)
-        #await gaw_msg.add_reaction("🎉")
-        await gaw_msg.add_reaction(icon)
+        await gaw_msg.add_reaction("🎉")
         await asyncio.sleep(gawtime)
 
         new_gaw_msg = await ctx.channel.fetch_message(gaw_msg.id)
-        users = await new_gaw_msg.reactions[0].users().flatten()
+        users = [user async for user in new_gaw_msg.reactions[0].users()]
         users.pop(users.index(self.bot.user))
         winner = random.choice(users)
         new_em = discord.Embed(title=f"{prize}", description=f"Winner: {winner.mention}\nHosted by: {ctx.author.mention}", color=0x00FF00)
@@ -40,5 +36,5 @@ class Giveaways(commands.Cog):
         await gaw_msg.edit(embed=new_em)
         await ctx.send(f"{winner.mention} has won the giveaway for **{prize}**!")
 
-def setup(bot):
-    bot.add_cog(Giveaways(bot))
+async def setup(bot):
+    await bot.add_cog(Giveaways(bot))

@@ -1,35 +1,28 @@
 import discord
-from discord.ext import commands
 import discord.utils
-import json
-from dotenv import load_dotenv
-import os
-import asyncio
-import discord
 from discord.ext import commands
 from PIL import Image, ImageFont, ImageDraw
 from io import BytesIO
 import os
+from db import db
 from discord.ext.commands import has_permissions
-load_dotenv()
-
-FOOTER = os.getenv('FOOTER')
-ICON = os.getenv('ICON_URL')
+import requests
+from main import FOOTER, ICON
 class Welcome(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.Cog.listener()
     async def on_member_join(self,member):
-        with open('db/welcomer/joinch_id.json', 'r') as f:
-          chid = json.load(f)
-        if chid[str(member.guild.id)] == "None":
-            channel = self.bot.get_channel(id=int(chid[str(member.guild.id)]))
-        else:
-            channel = self.bot.get_channel(id=int(chid[str(member.guild.id)]))
+        channelid = db.get_guild_welcomechannel(member.guild.id)
+        print(channelid)
+        if channelid != None:
+            channel = self.bot.get_channel(channelid)
             welcome = Image.open('img/card.png')
-            asset = member.avatar_url_as(size=128)
-            data = BytesIO(await asset.read())
+            asset = member.display_avatar.with_size(128).url
+            r = requests.get(asset)
+
+            data = BytesIO(r.content)
             pfp = Image.open(data)
             pfp = pfp.resize((258, 258))
             welcome.paste(pfp, (421, 62))
@@ -44,68 +37,41 @@ class Welcome(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_remove(self,member):
-        with open('db/welcomer/leavech_id.json', 'r') as f:
-          chid = json.load(f)
-        if chid[str(member.guild.id)] == "None":
-            channel = self.bot.get_channel(id=int(chid[str(member.guild.id)]))
-        else:
-            channel = self.bot.get_channel(id=int(chid[str(member.guild.id)]))
+        channelid = db.get_guild_leavechannel(member.guild.id)
+        if channelid != None:
+            channel = self.bot.get_channel(channelid)
             embed=discord.Embed(title=f"{member.name} has left", description=f"on server is {len(list(member.guild.members))} members", color=0xFF0000)
-            embed.set_thumbnail(url=f"{member.avatar_url}")
+            embed.set_thumbnail(url=f"{member.display_avatar.with_size(128).url}")
             embed.set_footer(text=FOOTER, icon_url=ICON)
             await channel.send(embed=embed)
 
     @commands.command()
     @has_permissions(administrator=True)
-    async def setjoinchannel(self,ctx,*, joinch:discord.TextChannel):
-        with open('db/welcomer/joinch_id.json', 'r') as f:
-            chid = json.load(f)
+    async def setjoinchannel(self,ctx,*, channel:discord.TextChannel):
+        db.update_guild_welcome_channel_id(ctx.guild.id, channel.id)
 
-        chid[str(ctx.guild.id)] = joinch.id
-
-        with open('db/welcomer/joinch_id.json', 'w') as f:
-            json.dump(chid, f, indent=4)
-
-        await ctx.send(f'Channel changed to: {joinch.mention}')
+        await ctx.send(f'Channel changed to: {channel.mention}')
 
     @commands.command()
     @has_permissions(administrator=True)
-    async def setleavechannel(self,ctx,*, leavech:discord.TextChannel):
-        with open('db/welcomer/leavech_id.json', 'r') as f:
-            chid = json.load(f)
-       
-        chid[str(ctx.guild.id)] = leavech.id
+    async def setleavechannel(self,ctx,*, channel:discord.TextChannel):
+        db.update_guild_leave_channel_id(ctx.guild.id, channel.id)
 
-        with open('db/welcomer/leavech_id.json', 'w') as f:
-            json.dump(chid, f, indent=4)
-
-        await ctx.send(f'Channel changed to: {leavech.mention}')
+        await ctx.send(f'Channel changed to: {channel.mention}')
 
     @commands.command()
     @has_permissions(administrator=True)
     async def disjoinchannel(self,ctx):
-        with open('db/welcomer/joinch_id.json', 'r') as f:
-            chid = json.load(f)
-
-        chid[str(ctx.guild.id)] = "None"
-
-        with open('db/welcomer/joinch_id.json', 'w') as f:
-            json.dump(chid, f, indent=4)
+        db.update_guild_welcome_channel_id(ctx.guild.id, 0)
 
         await ctx.send(f'Join channel disabled')
 
     @commands.command()
     @has_permissions(administrator=True)
     async def disleavechannel(self,ctx):
-        with open('db/welcomer/leavech_id.json', 'r') as f:
-            chid = json.load(f)
-       
-        chid[str(ctx.guild.id)] = "None"
-
-        with open('db/welcomer/leavech_id.json', 'w') as f:
-            json.dump(chid, f, indent=4)
+        db.update_guild_leave_channel_id(ctx.guild.id, 0)
 
         await ctx.send(f'Leave channel disabled')
 
-def setup(bot):
-    bot.add_cog(Welcome(bot))
+async def setup(bot):
+    await bot.add_cog(Welcome(bot))

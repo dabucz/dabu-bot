@@ -1,13 +1,9 @@
 import discord
 from discord.ext import commands
 import random
-import os, string
-from dotenv import load_dotenv
-import asyncio
-load_dotenv()
+import string
 import time
-FOOTER = os.getenv('FOOTER')
-ICON = os.getenv('ICON_URL')
+from main import FOOTER, ICON
 pepe = ["nemáš ho", "8==D", "8===D", "8=====D", "8======D", "8===============D"]
 
 class Fun(commands.Cog):
@@ -74,5 +70,5 @@ class Fun(commands.Cog):
         time.sleep(2)       
         await ctx.send(f"Finished hacking {member.name}")
 
-def setup(bot):
-    bot.add_cog(Fun(bot))
+async def setup(bot):
+    await bot.add_cog(Fun(bot))
