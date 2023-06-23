@@ -1,15 +1,11 @@
 import mysql.connector
-
-host = "dabu.cz"
-uname = "u24_WxwevBoD9e"
-password = "=Wmba!H=k+Y97wBha4lFm@qH"
-db_name = "s24_test"
+from main import host,uname,password,db_name
 
 db = mysql.connector.connect(
     host=host,
     user=uname,
     password=password,
-    database=db_name
+    database=db_name,
 )
 cursor = db.cursor()
 

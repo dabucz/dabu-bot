@@ -10,6 +10,11 @@ db.init()
 with open("config.json") as f:
     config = json.load(f)
 
+host = config.get("host")
+uname = config.get("username")
+password = config.get("password")
+db_name = config.get("db_name")
+
 def get_prefix(bot, message):
     return db.get_guild_prefix(message.guild.id)
 

@@ -2,8 +2,5 @@
 My first discord multi function bot
 
 # Usage
-you need to create .env file that has these variables:
-TOKEN
-STATUS
-FOOTER
-ICON_URL
+Change settings in config.json
+Enable/Disable modules in modules.json

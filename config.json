@@ -3,5 +3,11 @@
     "status":"tesitng",
     "footer":"bububu",
     "icon_url":"https://cdn.discordapp.com/app-icons/908399065723699220/285afed85f3ece84c0bb3eb77c8d8176.png?size=64",
-    "default_prefix":"."
+    "default_prefix":".",
+    "mysql": {
+        "host": "localhost",
+        "username": "root",
+        "password": "your super secret password",
+        "db_name": "bot_db"
+    }
 }
