@@ -3,7 +3,7 @@ from discord.ext import commands
 import random
 import string
 import time
-from main import FOOTER, ICON
+from Utils.config import FOOTER, ICON
 pepe = ["nemáš ho", "8==D", "8===D", "8=====D", "8======D", "8===============D"]
 
 class Fun(commands.Cog):

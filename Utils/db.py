@@ -1,20 +1,25 @@
 import mysql.connector
-from main import host,uname,password,db_name
+from Utils.config import mysql_config
 
-db = mysql.connector.connect(
+host = mysql_config.get("host")
+uname = mysql_config.get("username")
+password = mysql_config.get("password")
+db_name = mysql_config.get("db_name")
+
+conn = mysql.connector.connect(
     host=host,
     user=uname,
     password=password,
     database=db_name,
 )
-cursor = db.cursor()
+cursor = conn.cursor()
 
 def init():
     cursor.execute("CREATE TABLE if not exists guilds (guildID BIGINT(255), prefix VARCHAR(255), welcomeChannelID BIGINT(255), leaveChannelID BIGINT(255))")
 
 def register_guild(guildid, prefix):
     cursor.execute(f"INSERT INTO guilds (guildID, prefix, welcomeChannelID, leaveChannelID) VALUES ({guildid}, '{prefix}', 0, 0)")
-    db.commit()
+    conn.commit()
 
 def get_guild_prefix(guildid):
     cursor.execute(f"SELECT * FROM guilds WHERE guildID = {guildid}")
@@ -39,14 +44,14 @@ def get_guild_leavechannel(guildid):
 
 def update_guild_prefix(guildid, prefix):
     cursor.execute(f"UPDATE guilds SET prefix = '{prefix}' WHERE guildID = {guildid}")
-    db.commit()
+    conn.commit()
 def update_guild_welcome_channel_id(guildid, channelid):
     cursor.execute(f"UPDATE guilds SET welcomeChannelID = {channelid} WHERE guildID = {guildid}")
-    db.commit()
+    conn.commit()
 def update_guild_leave_channel_id(guildid, channelid):
     cursor.execute(f"UPDATE guilds SET leaveChannelID = {channelid} WHERE guildID = {guildid}")
-    db.commit()
+    conn.commit()
 
 def remove_guild(guildid):
     cursor.execute(f"DELETE FROM guilds WHERE guildID = {guildid}")
-    db.commit()
+    conn.commit()

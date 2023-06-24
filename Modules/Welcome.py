@@ -4,10 +4,10 @@ from discord.ext import commands
 from PIL import Image, ImageFont, ImageDraw
 from io import BytesIO
 import os
-from db import db
+from Utils import db
 from discord.ext.commands import has_permissions
 import requests
-from main import FOOTER, ICON
+from Utils.config import FOOTER, ICON
 class Welcome(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

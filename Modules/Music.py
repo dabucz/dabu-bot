@@ -8,7 +8,7 @@ import youtube_dl
 from async_timeout import timeout
 from discord.ext import commands
 import discord
-from main import FOOTER, ICON
+from Utils.config import FOOTER, ICON
 youtube_dl.utils.bug_reports_message = lambda: ''
 
 

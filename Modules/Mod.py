@@ -2,8 +2,8 @@ import os
 from discord.ext import commands
 import discord
 from discord.ext.commands import has_permissions, MissingPermissions
-from db import db
-from main import FOOTER, ICON
+from Utils import db
+from Utils.config import FOOTER, ICON
 
 class Mod(commands.Cog):
     def __init__(self, bot):

@@ -1,7 +1,6 @@
 from discord.ext import commands
-import os
 import discord
-from main import FOOTER, ICON
+from Utils.config import FOOTER, ICON
 
 class Info(commands.Cog):
     def __init__(self, bot):

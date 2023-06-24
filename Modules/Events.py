@@ -1,8 +1,7 @@
 from discord.ext import commands
-from dotenv import load_dotenv
-from db import db
+from Utils import db
 
-from main import DEFAULT_PREFIX
+from Utils.config import default_prefix
 
 class Events(commands.Cog):
     def __init__(self, bot):
@@ -26,3 +25,4 @@ class Events(commands.Cog):
 
 async def setup(bot):
     await bot.add_cog(Events(bot))
+    

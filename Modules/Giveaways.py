@@ -5,7 +5,7 @@ import random
 
 from discord.ext.commands import has_permissions
 
-from main import ICON
+from Utils.config import ICON
 
 class Giveaways(commands.Cog):
     def __init__(self, bot):

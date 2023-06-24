@@ -1,8 +1,8 @@
 import discord
 from discord.ext import commands
 
-from db.db import get_guild_prefix
-from main import FOOTER, ICON
+from Utils.db import get_guild_prefix
+from Utils.config import FOOTER, ICON
 
 class Help(commands.Cog):
     def __init__(self, bot):
